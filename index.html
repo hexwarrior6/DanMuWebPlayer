@@ -19,7 +19,7 @@
             display: flex;
             flex-direction: row;
             gap: 32px;
-            max-width: 1200px;
+            max-width: 80%;
             margin: 48px auto 0 auto;
             padding: 0 16px;
         }
@@ -39,7 +39,6 @@
             }
         }
 
-
         .player-card {
             flex: 2;
             background: #fff;
@@ -57,10 +56,15 @@
             overflow: hidden;
             box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.06);
             margin-bottom: 32px;
-            min-height: 400px;
-            /* 新增：保证有占位高度 */
             position: relative;
-            /* 新增：用于定位占位层 */
+            aspect-ratio: 16/9;
+            min-height: 360px; /* 提供一个最小高度作为备用 */
+        }
+
+        /* DPlayer加载后会创建自己的容器，确保它填满父元素 */
+        #dplayer .dplayer-video-wrap {
+            width: 100%;
+            height: 100%;
         }
 
         #video-placeholder {
