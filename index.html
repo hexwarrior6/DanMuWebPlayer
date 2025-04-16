@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,6 +14,7 @@
             margin: 0;
             padding: 0;
         }
+
         .main-layout {
             display: flex;
             flex-direction: row;
@@ -21,6 +23,7 @@
             margin: 48px auto 0 auto;
             padding: 0 16px;
         }
+
         @media (max-width: 900px) {
             .main-layout {
                 flex-direction: column;
@@ -28,28 +31,36 @@
                 margin-top: 24px;
             }
         }
+
         .player-card {
             flex: 2;
             background: #fff;
             border-radius: 28px;
-            box-shadow: 0 6px 32px 0 rgba(30,34,40,0.10);
+            box-shadow: 0 6px 32px 0 rgba(30, 34, 40, 0.10);
             padding: 32px 32px 24px 32px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
+
         #dplayer {
             width: 100%;
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 2px 12px 0 rgba(0,0,0,0.06);
+            box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.06);
             margin-bottom: 32px;
-            min-height: 400px; /* 新增：保证有占位高度 */
-            position: relative; /* 新增：用于定位占位层 */
+            min-height: 400px;
+            /* 新增：保证有占位高度 */
+            position: relative;
+            /* 新增：用于定位占位层 */
         }
+
         #video-placeholder {
             position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -62,11 +73,13 @@
             height: 100%;
             width: 100%;
         }
+
         #video-placeholder .icon {
             font-size: 60px;
             margin-bottom: 18px;
             color: #e3e5e7;
         }
+
         .controls {
             display: flex;
             gap: 18px;
@@ -74,6 +87,7 @@
             width: 100%;
             justify-content: center;
         }
+
         input[type="text"] {
             flex: 1;
             padding: 14px 18px;
@@ -84,10 +98,13 @@
             background: #f7f8fa;
             transition: border 0.2s;
         }
+
         input[type="text"]:focus {
             border-color: #00A1D6;
         }
-        button, .file-label {
+
+        button,
+        .file-label {
             border: none;
             border-radius: 14px;
             font-size: 18px;
@@ -97,18 +114,23 @@
             color: #fff;
             cursor: pointer;
             transition: background 0.2s, box-shadow 0.2s;
-            box-shadow: 0 2px 8px 0 rgba(0,0,0,0.08);
+            box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.08);
         }
-        button:hover, .file-label:hover {
+
+        button:hover,
+        .file-label:hover {
             background: #444;
         }
+
         button:disabled {
             background: #b8c0cc;
             cursor: not-allowed;
         }
+
         .file-input {
             display: none;
         }
+
         .status {
             margin-top: 18px;
             padding: 14px;
@@ -118,10 +140,12 @@
             font-size: 16px;
             text-align: center;
         }
+
         .progress-container {
             margin-top: 18px;
             display: none;
         }
+
         progress {
             width: 100%;
             height: 18px;
@@ -130,6 +154,7 @@
             background: #e3e5e7;
             accent-color: #00A1D6;
         }
+
         #progressText {
             color: #00A1D6;
             font-weight: 600;
@@ -137,11 +162,12 @@
             font-size: 16px;
             text-align: center;
         }
+
         .info-card {
             flex: 1;
             background: #fff;
             border-radius: 28px;
-            box-shadow: 0 6px 32px 0 rgba(30,34,40,0.10);
+            box-shadow: 0 6px 32px 0 rgba(30, 34, 40, 0.10);
             padding: 32px 24px;
             display: flex;
             flex-direction: column;
@@ -149,6 +175,7 @@
             min-width: 240px;
             max-width: 320px;
         }
+
         .avatar {
             width: 72px;
             height: 72px;
@@ -157,6 +184,7 @@
             margin-bottom: 18px;
             object-fit: cover;
         }
+
         .info-title {
             font-size: 20px;
             font-weight: 700;
@@ -164,12 +192,14 @@
             margin-bottom: 8px;
             margin-top: 30px;
         }
+
         .info-detail {
             font-size: 15px;
             color: #666;
             margin-bottom: 14px;
             text-align: center;
         }
+
         .info-section {
             width: 100%;
             margin-bottom: 10px;
@@ -177,6 +207,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="main-layout">
         <div class="player-card">
@@ -210,7 +241,8 @@
                     <li>支持批量加载与取消</li>
                 </ul>
             </div>
-            <div style="margin-top:18px; width:100%; display:flex; margin-top:60px; flex-direction:column; gap:14px; align-items:center;">
+            <div
+                style="margin-top:18px; width:100%; display:flex; margin-top:60px; flex-direction:column; gap:14px; align-items:center;">
                 <label for="videoFile" class="file-label" style="width:80%;">选择视频</label>
                 <input type="file" id="videoFile" class="file-input" accept="video/mp4">
                 <label for="danmuFile" class="file-label" style="width:80%;">选择弹幕</label>
@@ -221,7 +253,7 @@
 
     <!-- 引入必要的库 -->
     <script src="https://cdn.jsdelivr.net/npm/dplayer/dist/DPlayer.min.js"></script>
-    
+
     <script>
         // 全局变量
         let dp;
@@ -229,7 +261,7 @@
         let danmuList = []; // 存储弹幕
         let loadingWorker = null;
         let isCancelled = false;
-        
+
         // 初始化播放器
         function initPlayer() {
             if (dp) {
@@ -259,28 +291,28 @@
 
             updateStatus(`播放器已初始化，等待加载弹幕...`);
         }
-        
+
         // 更新状态显示
         function updateStatus(message) {
             document.getElementById('status').textContent = message;
         }
-        
+
         // 批量加载弹幕
         function batchLoadDanmus(danmus, batchSize = 100) {
             const progressContainer = document.getElementById('progressContainer');
             const progressBar = document.getElementById('loadProgress');
             const progressText = document.getElementById('progressText');
-            
+
             progressContainer.style.display = 'block';
             progressBar.value = 0;
             progressText.textContent = '加载中: 0%';
-            
+
             let loaded = 0;
             const total = danmus.length;
             isCancelled = false;
-            
+
             document.getElementById('cancelLoad').disabled = false;
-            
+
             function loadNextBatch() {
                 if (isCancelled) {
                     updateStatus(`已取消加载，已加载 ${loaded}/${total} 条弹幕`);
@@ -288,7 +320,7 @@
                     document.getElementById('cancelLoad').disabled = true;
                     return;
                 }
-                
+
                 const batchEnd = Math.min(loaded + batchSize, total);
 
                 // 修改：逐条添加弹幕
@@ -306,7 +338,7 @@
                 const percent = Math.round((loaded / total) * 100);
                 progressBar.value = percent;
                 progressText.textContent = `加载中: ${percent}% (${loaded}/${total})`;
-                
+
                 if (loaded < total) {
                     setTimeout(loadNextBatch, 0);
                 } else {
@@ -315,25 +347,25 @@
                     document.getElementById('cancelLoad').disabled = true;
                 }
             }
-            
+
             loadNextBatch();
         }
-        
+
         // 使用正则表达式解析XML (兼容Web Worker环境)
         function parseDanmuWithRegex(xmlText) {
             const danmuRegex = /<d p="([^"]+)">([^<]+)<\/d>/g;
             const result = [];
             let match;
-            
+
             while ((match = danmuRegex.exec(xmlText)) !== null) {
                 const attrs = match[1].split(',');
                 const text = match[2];
-                
+
                 if (attrs.length >= 8) {
                     const time = parseFloat(attrs[0]);
                     const type = parseInt(attrs[1]);
                     const color = parseInt(attrs[3]);
-                    
+
                     if (type === 1) { // 只处理滚动弹幕
                         result.push({
                             text: text,
@@ -344,10 +376,10 @@
                     }
                 }
             }
-            
+
             return result;
         }
-        
+
         // 使用Web Worker解析XML (使用正则表达式替代DOMParser)
         function parseDanmuWithWorker(xmlText) {
             return new Promise((resolve, reject) => {
@@ -395,8 +427,8 @@
                             };
                         `], { type: 'application/javascript' })
                     ));
-                    
-                    worker.onmessage = function(e) {
+
+                    worker.onmessage = function (e) {
                         if (e.data.success) {
                             resolve(e.data.data);
                         } else {
@@ -404,12 +436,12 @@
                         }
                         worker.terminate();
                     };
-                    
-                    worker.onerror = function(error) {
+
+                    worker.onerror = function (error) {
                         reject(error);
                         worker.terminate();
                     };
-                    
+
                     worker.postMessage(xmlText);
                 } else {
                     // 浏览器不支持Web Worker，回退到主线程解析
@@ -422,7 +454,7 @@
                 }
             });
         }
-        
+
         // 主线程解析XML (使用DOMParser)
         function parseDanmuXML(xmlText) {
             try {
@@ -430,16 +462,16 @@
                 const xmlDoc = parser.parseFromString(xmlText, "text/xml");
                 const danmus = xmlDoc.getElementsByTagName('d');
                 const result = [];
-                
+
                 for (let i = 0; i < danmus.length; i++) {
                     const danmu = danmus[i];
                     const attrs = danmu.getAttribute('p').split(',');
-                    
+
                     if (attrs.length >= 8) {
                         const time = parseFloat(attrs[0]);
                         const type = parseInt(attrs[1]);
                         const color = parseInt(attrs[3]);
-                        
+
                         if (type === 1) {
                             result.push({
                                 text: danmu.textContent,
@@ -450,7 +482,7 @@
                         }
                     }
                 }
-                
+
                 return result;
             } catch (error) {
                 updateStatus(`弹幕解析失败: ${error.message}`);
@@ -458,9 +490,9 @@
                 return [];
             }
         }
-        
+
         // 事件监听
-        document.getElementById('sendDanmu').addEventListener('click', function() {
+        document.getElementById('sendDanmu').addEventListener('click', function () {
             const text = document.getElementById('danmuInput').value;
             if (text.trim() !== '' && dp) {
                 dp.danmaku.draw({
@@ -472,14 +504,14 @@
                 updateStatus(`已发送弹幕: ${text}`);
             }
         });
-        
-        document.getElementById('danmuInput').addEventListener('keypress', function(e) {
+
+        document.getElementById('danmuInput').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 document.getElementById('sendDanmu').click();
             }
         });
-        
-        document.getElementById('videoFile').addEventListener('change', function(e) {
+
+        document.getElementById('videoFile').addEventListener('change', function (e) {
             const file = e.target.files[0];
             const videoLabel = document.querySelector('label[for="videoFile"]');
             if (file) {
@@ -493,14 +525,14 @@
                 if (videoLabel) videoLabel.textContent = '选择视频';
             }
         });
-        
+
         // 新增：根据时间戳实时加载弹幕
         function setupDanmuRealtimeLoader() {
             if (!dp) return;
             // 重置所有弹幕的 sent 标记
             danmuList.forEach(d => d.sent = false);
-        
-            dp.on('timeupdate', function() {
+
+            dp.on('timeupdate', function () {
                 const currentTime = dp.video.currentTime;
                 // 只绘制当前时间±0.3秒内且未发送过的弹幕
                 danmuList.forEach(danmu => {
@@ -515,17 +547,17 @@
                     }
                 });
             });
-        
+
             // 当 seek 时，重置 sent 标记
-            dp.on('seeked', function() {
+            dp.on('seeked', function () {
                 const currentTime = dp.video.currentTime;
                 danmuList.forEach(danmu => {
                     danmu.sent = danmu.time < currentTime - 0.3;
                 });
             });
         }
-        
-        document.getElementById('danmuFile').addEventListener('change', function(e) {
+
+        document.getElementById('danmuFile').addEventListener('change', function (e) {
             const file = e.target.files[0];
             const danmuLabel = document.querySelector('label[for="danmuFile"]');
             if (file) {
@@ -533,7 +565,7 @@
                 if (danmuLabel) danmuLabel.textContent = `弹幕：${file.name}`;
                 updateStatus(`正在解析弹幕文件: ${file.name}...`);
                 const reader = new FileReader();
-                reader.onload = async function(e) {
+                reader.onload = async function (e) {
                     try {
                         // 使用Web Worker解析XML
                         updateStatus("正在解析弹幕(后台处理)...");
@@ -553,14 +585,14 @@
                         // Web Worker解析失败，尝试主线程解析
                         updateStatus("Web Worker解析失败，尝试主线程解析...");
                         console.warn("Web Worker解析失败:", error);
-                        
+
                         try {
                             const startTime = performance.now();
                             const parsedDanmus = parseDanmuXML(e.target.result);
                             const endTime = performance.now();
-                            
+
                             updateStatus(`主线程解析完成，耗时 ${(endTime - startTime).toFixed(2)}ms，共 ${parsedDanmus.length} 条弹幕`);
-                            
+
                             if (dp) {
                                 updateStatus("开始加载弹幕到播放器...");
                                 batchLoadDanmus(parsedDanmus);
@@ -571,20 +603,21 @@
                         }
                     }
                 };
-                reader.onerror = function() {
+                reader.onerror = function () {
                     updateStatus('弹幕文件读取失败');
                 };
                 reader.readAsText(file);
             }
         });
-        
-        document.getElementById('cancelLoad').addEventListener('click', function() {
+
+        document.getElementById('cancelLoad').addEventListener('click', function () {
             isCancelled = true;
             this.disabled = true;
         });
-        
+
         // 初始化
         updateStatus('请选择视频文件和弹幕文件');
     </script>
 </body>
+
 </html>
