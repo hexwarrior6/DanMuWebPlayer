@@ -58,7 +58,8 @@
             margin-bottom: 32px;
             position: relative;
             aspect-ratio: 16/9;
-            min-height: 360px; /* 提供一个最小高度作为备用 */
+            min-height: 360px;
+            /* 提供一个最小高度作为备用 */
         }
 
         /* DPlayer加载后会创建自己的容器，确保它填满父元素 */
@@ -254,6 +255,17 @@
                     <li>支持批量加载与取消</li>
                 </ul>
             </div>
+
+            <!-- 新增弹幕速度调节滑块 -->
+            <div class="info-section" style="margin-top: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <b>弹幕速度：</b>
+                    <span id="speedValue">1.0</span>
+                </div>
+                <input type="range" id="speedSlider" min="0.1" max="2" step="0.1" value="1"
+                    style="width: 100%; height: 6px; border-radius: 3px; outline: none;">
+            </div>
+
             <div
                 style="margin-top:18px; width:100%; display:flex; margin-top:60px; flex-direction:column; gap:14px; align-items:center;">
                 <label for="videoFile" class="file-label" style="width:80%;">选择视频</label>
@@ -283,6 +295,24 @@
             const placeholder = document.getElementById('video-placeholder');
             if (placeholder) placeholder.style.display = 'none';
 
+            // 获取当前设置的弹幕速度
+            const speedRate = parseFloat(document.getElementById('speedSlider').value);
+
+            // 添加全局样式控制弹幕速度
+            let speedStyle = document.getElementById('danmu-speed-style');
+            if (!speedStyle) {
+                speedStyle = document.createElement('style');
+                speedStyle.id = 'danmu-speed-style';
+                document.head.appendChild(speedStyle);
+            }
+
+            // 计算动画时间
+            const baseDuration = 8.5;
+            const newDuration = baseDuration / speedRate;
+
+            // 更新全局样式
+            speedStyle.textContent = `.dplayer-danmaku-item { animation-duration: ${newDuration}s !important; }`;
+
             dp = new DPlayer({
                 container: document.getElementById('dplayer'),
                 autoplay: false,
@@ -296,7 +326,8 @@
                     api: '',
                     maximum: 1000,
                     addition: [],
-                    user: '观众'
+                    user: '观众',
+                    speedRate: speedRate,
                 },
                 contextmenu: []
             });
@@ -507,13 +538,64 @@
         document.getElementById('sendDanmu').addEventListener('click', function () {
             const text = document.getElementById('danmuInput').value;
             if (text.trim() !== '' && dp) {
+                // 获取当前速度设置
+                const currentSpeed = dp.danmaku.speedRate;
+
                 dp.danmaku.draw({
                     text: text,
                     color: '#ffffff',
                     type: 'right'
                 });
+
+                // 确保新发送的弹幕使用当前速度
+                setTimeout(() => {
+                    const danmuItems = document.querySelectorAll('.dplayer-danmaku-item');
+                    if (danmuItems.length > 0) {
+                        const lastItem = danmuItems[danmuItems.length - 1];
+                        const baseDuration = 8.5;
+                        lastItem.style.animationDuration = `${baseDuration / currentSpeed}s`;
+                    }
+                }, 10);
+
                 document.getElementById('danmuInput').value = '';
                 updateStatus(`已发送弹幕: ${text}`);
+            }
+        });
+
+        // 新增：弹幕速度调节滑块事件监听
+        document.getElementById('speedSlider').addEventListener('input', function () {
+            const speedValue = parseFloat(this.value);
+            document.getElementById('speedValue').textContent = speedValue.toFixed(1);
+            if (dp && dp.danmaku) {
+                // 保存当前速度设置
+                dp.danmaku.speedRate = speedValue;
+
+                // 清除所有现有弹幕
+                dp.danmaku.clear();
+
+                // 重置所有弹幕的sent标记，以便重新加载
+                if (danmuList && danmuList.length > 0) {
+                    danmuList.forEach(danmu => {
+                        danmu.sent = false;
+                    });
+                }
+
+                // 添加一个全局样式来控制所有弹幕的速度
+                let speedStyle = document.getElementById('danmu-speed-style');
+                if (!speedStyle) {
+                    speedStyle = document.createElement('style');
+                    speedStyle.id = 'danmu-speed-style';
+                    document.head.appendChild(speedStyle);
+                }
+
+                // 计算新的动画时间（基于默认速度1.0）
+                const baseDuration = 8.5; // DPlayer默认动画时间
+                const newDuration = baseDuration / speedValue;
+
+                // 更新全局样式
+                speedStyle.textContent = `.dplayer-danmaku-item { animation-duration: ${newDuration}s !important; }`;
+
+                updateStatus(`弹幕速度已调整为: ${speedValue.toFixed(1)}`);
             }
         });
 
@@ -546,6 +628,8 @@
 
             dp.on('timeupdate', function () {
                 const currentTime = dp.video.currentTime;
+                const currentSpeed = dp.danmaku.speedRate; // 获取当前速度设置
+
                 // 只绘制当前时间±0.3秒内且未发送过的弹幕
                 danmuList.forEach(danmu => {
                     if (!danmu.sent && Math.abs(danmu.time - currentTime) < 0.3) {
@@ -555,6 +639,17 @@
                             type: danmu.type || 'right',
                             time: danmu.time
                         });
+
+                        // 找到刚添加的弹幕并应用当前速度
+                        setTimeout(() => {
+                            const danmuItems = document.querySelectorAll('.dplayer-danmaku-item');
+                            if (danmuItems.length > 0) {
+                                const lastItem = danmuItems[danmuItems.length - 1];
+                                const baseDuration = 8.5;
+                                lastItem.style.animationDuration = `${baseDuration / currentSpeed}s`;
+                            }
+                        }, 0);
+
                         danmu.sent = true;
                     }
                 });
