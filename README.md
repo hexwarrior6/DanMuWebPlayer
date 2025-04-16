@@ -16,6 +16,7 @@
 ## 使用方法
 
 1. 打开本项目的 `index.html` 文件（建议使用现代浏览器，如 Chrome、Edge、Safari）。
+> 也可以直接访问 】https://hexwarrior6.github.io/DanMuWebPlayer/
 2. 在右侧“选择视频”按钮选择本地 MP4 视频文件。
 3. 在右侧“选择弹幕”按钮选择本地弹幕 XML 文件（如 B 站导出的弹幕）。
 4. 点击播放，弹幕会随视频实时显示。
