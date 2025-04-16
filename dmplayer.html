@@ -481,12 +481,16 @@
         
         document.getElementById('videoFile').addEventListener('change', function(e) {
             const file = e.target.files[0];
+            const videoLabel = document.querySelector('label[for="videoFile"]');
             if (file) {
                 videoUrl = URL.createObjectURL(file);
-                // 新增：将标题改为视频文件名
                 document.querySelector('.player-card h1').textContent = file.name;
                 updateStatus(`已加载视频文件: ${file.name}`);
                 initPlayer();
+                // 修改按钮文字
+                if (videoLabel) videoLabel.textContent = `视频：${file.name}`;
+            } else {
+                if (videoLabel) videoLabel.textContent = '选择视频';
             }
         });
         
@@ -523,7 +527,10 @@
         
         document.getElementById('danmuFile').addEventListener('change', function(e) {
             const file = e.target.files[0];
+            const danmuLabel = document.querySelector('label[for="danmuFile"]');
             if (file) {
+                // 新增：选择弹幕后显示文件名
+                if (danmuLabel) danmuLabel.textContent = `弹幕：${file.name}`;
                 updateStatus(`正在解析弹幕文件: ${file.name}...`);
                 const reader = new FileReader();
                 reader.onload = async function(e) {
