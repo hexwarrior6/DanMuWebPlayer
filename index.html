@@ -30,7 +30,15 @@
                 gap: 20px;
                 margin-top: 24px;
             }
+
+            .controls input[type="text"] {
+                max-width: 100%;
+                /* 新增：在移动端允许宽度自适应父容器 */
+                min-width: 0;
+                /* 新增：防止flex导致的溢出 */
+            }
         }
+
 
         .player-card {
             flex: 2;
@@ -97,6 +105,8 @@
             outline: none;
             background: #f7f8fa;
             transition: border 0.2s;
+            max-width: 400px;
+            /* 新增：限制最大宽度，防止超出 */
         }
 
         input[type="text"]:focus {
@@ -221,7 +231,6 @@
             <div class="controls">
                 <input type="text" id="danmuInput" placeholder="输入弹幕内容">
                 <button id="sendDanmu">发送</button>
-                <button id="cancelLoad" disabled>取消</button>
             </div>
             <div class="progress-container" id="progressContainer">
                 <progress id="loadProgress" value="0" max="100"></progress>
@@ -608,11 +617,6 @@
                 };
                 reader.readAsText(file);
             }
-        });
-
-        document.getElementById('cancelLoad').addEventListener('click', function () {
-            isCancelled = true;
-            this.disabled = true;
         });
 
         // 初始化
