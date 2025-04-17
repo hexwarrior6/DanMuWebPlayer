@@ -183,7 +183,8 @@
             background: linear-gradient(135deg, #fafdff 60%, #e9f3ff 100%);
             border-radius: 32px;
             box-shadow: 0 8px 36px 0 rgba(30, 34, 40, 0.13), 0 1.5px 6px 0 rgba(0, 161, 214, 0.06);
-            padding: 38px 40px 32px 38px;
+            padding: 24px 24px 18px 24px;
+            /* 缩小上下内边距 */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -226,14 +227,16 @@
 
         .info-section {
             width: 100%;
-            margin-bottom: 16px;
-            margin-top: 32px;
+            margin-bottom: 10px;
+            /* 缩小下间距 */
+            margin-top: 18px;
+            /* 缩小上间距 */
             position: relative;
         }
 
         .info-section:not(:first-child) {
-            margin-top: 40px;
-            /* 统一分割线和内容间距 */
+            margin-top: 22px;
+            /* 缩小分割线和内容间距 */
         }
 
         .info-section:not(:first-child)::before {
@@ -366,7 +369,7 @@
             </div>
 
             <div
-                style="margin-top:18px; width:100%; display:flex; margin-top:60px; flex-direction:column; gap:14px; align-items:center;">
+                style="margin-top:12px; width:100%; display:flex; flex-direction:column; gap:10px; align-items:center;">
                 <label for="videoFile" class="file-label" style="width:80%;">选择视频</label>
                 <input type="file" id="videoFile" class="file-input" accept="video/mp4">
                 <label for="danmuFileXml" class="file-label" style="width:80%;">标准XML弹幕</label>
