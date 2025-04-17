@@ -369,8 +369,10 @@
                 style="margin-top:18px; width:100%; display:flex; margin-top:60px; flex-direction:column; gap:14px; align-items:center;">
                 <label for="videoFile" class="file-label" style="width:80%;">选择视频</label>
                 <input type="file" id="videoFile" class="file-input" accept="video/mp4">
-                <label for="danmuFile" class="file-label" style="width:80%;">选择弹幕</label>
-                <input type="file" id="danmuFile" class="file-input" accept=".xml">
+                <label for="danmuFileXml" class="file-label" style="width:80%;">标准XML弹幕</label>
+                <input type="file" id="danmuFileXml" class="file-input" accept=".xml">
+                <label for="danmuFileJson" class="file-label" style="width:80%;">人人视频弹幕</label>
+                <input type="file" id="danmuFileJson" class="file-input" accept=".json">
             </div>
         </div>
     </div>
@@ -763,24 +765,25 @@
             });
         }
 
-        document.getElementById('danmuFile').addEventListener('change', function (e) {
+        // 删除原有的 danmuFile 相关监听
+        // document.getElementById('danmuFile').addEventListener(...);  // ← 删除这一段
+
+        // 新增：标准XML弹幕监听
+        document.getElementById('danmuFileXml').addEventListener('change', function (e) {
             const file = e.target.files[0];
-            const danmuLabel = document.querySelector('label[for="danmuFile"]');
+            const danmuLabel = document.querySelector('label[for="danmuFileXml"]');
             if (file) {
-                // 新增：选择弹幕后显示文件名
-                if (danmuLabel) danmuLabel.textContent = `弹幕：${file.name}`;
+                if (danmuLabel) danmuLabel.textContent = `标准XML弹幕：${file.name}`;
                 updateStatus(`正在解析弹幕文件: ${file.name}...`);
                 const reader = new FileReader();
                 reader.onload = async function (e) {
                     try {
-                        // 使用Web Worker解析XML
                         updateStatus("正在解析弹幕(后台处理)...");
                         const startTime = performance.now();
                         const parsedDanmus = await parseDanmuWithWorker(e.target.result);
                         const endTime = performance.now();
                         updateStatus(`解析完成，耗时 ${(endTime - startTime).toFixed(2)}ms，共 ${parsedDanmus.length} 条弹幕`);
                         if (dp) {
-                            // 新增：保存弹幕并启动实时加载
                             danmuList = parsedDanmus;
                             setupDanmuRealtimeLoader();
                             updateStatus("弹幕已准备，将随视频播放实时加载");
@@ -788,25 +791,42 @@
                             updateStatus('请先加载视频文件');
                         }
                     } catch (error) {
-                        // Web Worker解析失败，尝试主线程解析
-                        updateStatus("Web Worker解析失败，尝试主线程解析...");
-                        console.warn("Web Worker解析失败:", error);
+                        updateStatus("弹幕解析失败: " + error.message);
+                        console.error(error);
+                    }
+                };
+                reader.onerror = function () {
+                    updateStatus('弹幕文件读取失败');
+                };
+                reader.readAsText(file);
+            }
+        });
 
-                        try {
-                            const startTime = performance.now();
-                            const parsedDanmus = parseDanmuXML(e.target.result);
-                            const endTime = performance.now();
-
-                            updateStatus(`主线程解析完成，耗时 ${(endTime - startTime).toFixed(2)}ms，共 ${parsedDanmus.length} 条弹幕`);
-
-                            if (dp) {
-                                updateStatus("开始加载弹幕到播放器...");
-                                batchLoadDanmus(parsedDanmus);
-                            }
-                        } catch (error) {
-                            updateStatus(`弹幕文件处理失败: ${error.message}`);
-                            console.error(error);
+        // 新增：人人视频弹幕监听
+        document.getElementById('danmuFileJson').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            const danmuLabel = document.querySelector('label[for="danmuFileJson"]');
+            if (file) {
+                if (danmuLabel) danmuLabel.textContent = `人人视频弹幕：${file.name}`;
+                updateStatus(`正在解析人人视频弹幕文件: ${file.name}...`);
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    try {
+                        updateStatus("正在解析人人视频弹幕...");
+                        const startTime = performance.now();
+                        const parsedDanmus = parseDanmuJSON(e.target.result);
+                        const endTime = performance.now();
+                        updateStatus(`人人视频弹幕解析完成，耗时 ${(endTime - startTime).toFixed(2)}ms，共 ${parsedDanmus.length} 条弹幕`);
+                        if (dp) {
+                            danmuList = parsedDanmus;
+                            setupDanmuRealtimeLoader();
+                            updateStatus("弹幕已准备，将随视频播放实时加载");
+                        } else {
+                            updateStatus('请先加载视频文件');
                         }
+                    } catch (error) {
+                        updateStatus("人人视频弹幕解析失败: " + error.message);
+                        console.error(error);
                     }
                 };
                 reader.onerror = function () {
@@ -818,6 +838,37 @@
 
         // 初始化
         updateStatus('请选择视频文件和弹幕文件');
+
+        // 新增：解析 JSON 弹幕
+        function parseDanmuJSON(jsonText) {
+            let result = [];
+            try {
+                const arr = JSON.parse(jsonText);
+                for (const item of arr) {
+                    if (item.p && item.d) {
+                        const attrs = item.p.split(',');
+                        if (attrs.length >= 8) {
+                            const time = parseFloat(attrs[0]);
+                            const type = parseInt(attrs[1]);
+                            const color = parseInt(attrs[3]);
+                            if (type === 1) {
+                                result.push({
+                                    text: item.d,
+                                    color: '#' + color.toString(16).padStart(6, '0'),
+                                    type: 'right',
+                                    time: time
+                                });
+                            }
+                        }
+                    }
+                }
+            } catch (e) {
+                updateStatus('人人视频弹幕解析失败: ' + e.message);
+                console.error(e);
+            }
+            return result;
+        }
+
     </script>
 </body>
 
