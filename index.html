@@ -183,8 +183,8 @@
             background: linear-gradient(135deg, #fafdff 60%, #e9f3ff 100%);
             border-radius: 32px;
             box-shadow: 0 8px 36px 0 rgba(30, 34, 40, 0.13), 0 1.5px 6px 0 rgba(0, 161, 214, 0.06);
-            padding: 24px 24px 18px 24px;
-            /* 缩小上下内边距 */
+            padding: 20px;
+            /* 减少上下内边距 */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -196,91 +196,152 @@
         }
 
         .avatar {
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            /* 缩小头像 */
+            height: 70px;
+            /* 缩小头像 */
             border-radius: 50%;
             background: #e3e5e7;
-            margin-bottom: 22px;
+            margin-bottom: 16px;
+            /* 减少间距 */
             object-fit: cover;
             border: 3px solid #fff;
             box-shadow: 0 2px 12px 0 rgba(0, 161, 214, 0.08);
         }
 
-        .info-title {
-            font-size: 22px;
-            font-weight: 800;
-            color: #1a2233;
-            margin-bottom: 10px;
-            margin-top: 24px;
-            letter-spacing: 1px;
-        }
-
         .info-detail {
-            font-size: 15.5px;
+            font-size: 15px;
+            /* 略微缩小字体 */
             color: #4a6fa1;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
+            /* 减少间距 */
             text-align: center;
             background: #f2f7fb;
             border-radius: 10px;
-            padding: 8px 12px;
+            padding: 6px 10px;
+            /* 减少内边距 */
         }
 
         .info-section {
             width: 100%;
-            margin-bottom: 10px;
-            /* 缩小下间距 */
-            margin-top: 18px;
-            /* 缩小上间距 */
+            margin-bottom: 8px;
+            /* 减少下间距 */
+            margin-top: 12px;
+            /* 减少上间距 */
             position: relative;
         }
 
         .info-section:not(:first-child) {
-            margin-top: 22px;
-            /* 缩小分割线和内容间距 */
+            margin-top: 16px;
+            /* 调整分割线和内容间距 */
         }
 
         .info-section:not(:first-child)::before {
             content: "";
             display: block;
-            width: 70%;
-            height: 1.5px;
+            width: 60%;
+            /* 缩短分割线 */
+            height: 1px;
+            /* 变细分割线 */
             background: linear-gradient(90deg, #e3e5e7 0%, #b8c0cc 100%);
-            margin: 0 auto 18px auto;
+            margin: 0 auto 12px auto;
+            /* 调整分割线上下间距 */
             border-radius: 1px;
+        }
+
+        .info-section b {
+            /* 为分区标题添加样式 */
+            display: block;
+            text-align: left;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 8px;
+            margin-left: 20px;
         }
 
         .info-section ul {
             padding-left: 0;
-            margin: 10px 0 0 0;
+            margin: 8px 0 0 0;
+            /* 调整列表边距 */
             color: #3a4a5a;
-            font-size: 15px;
+            font-size: 14px;
+            /* 缩小列表字体 */
             list-style: none;
+            text-align: center;
+            /* 居中列表项 */
         }
 
         .info-section ul li {
-            margin-bottom: 7px;
+            margin-bottom: 5px;
+            /* 减少列表项间距 */
+            display: inline-block;
+            /* 让列表项水平排列，如果需要 */
+            margin-right: 10px;
+            /* 如果水平排列，添加右边距 */
+            align-items: start;
+            /* 确保列表项对齐 */
+            text-align: left;
+            /* 确保文本对齐 */
             display: flex;
-            align-items: center;
+            /* 确保项目符号对齐 */
+            margin-left: 20px;
         }
 
         .info-section ul li::before {
             content: "•";
             color: #00A1D6;
-            font-size: 18px;
-            margin-right: 8px;
+            font-size: 16px;
+            /* 调整项目符号大小 */
+            margin-right: 6px;
+            /* 调整项目符号间距 */
             line-height: 1;
+        }
+
+        /* 统一文件选择标签和输入框组样式 */
+        .file-control-group {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            margin-top: 8px;
+            /* 减少与标题的间距 */
+        }
+
+        .file-label,
+        .input-group-container {
+            /* 应用于标签和输入框组容器 */
+            display: block;
+            /* 或 flex */
+            width: 100%;
+            /* 统一宽度 */
+            max-width: 300px;
+            /* 设置最大宽度 */
+            margin-left: auto;
+            margin-right: auto;
+            box-sizing: border-box;
+        }
+
+        .input-group-container {
+            /* 特指输入框+按钮的容器 */
+            display: flex;
+            gap: 8px;
+            height: 48px;
+            /* 保持高度一致 */
+            padding: 0;
+            /* 移除容器的内边距 */
         }
 
         /* 弹幕速度滑块美化 */
         #speedSlider {
-            width: 100%;
+            width: 87%;
             height: 8px;
             border-radius: 4px;
             background: linear-gradient(90deg, #00A1D6 0%, #e3e5e7 100%);
             outline: none;
-            margin-top: 2px;
-            margin-bottom: 0;
             accent-color: #00A1D6;
+            margin: auto;
+            display: flex;
         }
 
         #speedSlider::-webkit-slider-thumb {
@@ -320,28 +381,32 @@
             color: #00A1D6;
             font-weight: bold;
             font-size: 17px;
-            margin-left: 6px;
+            margin-right: 25px;
         }
 
         .file-input-style {
             flex: 1;
             border: 2px solid #e3e5e7;
             border-radius: 14px;
-            font-size: 18px;
+            font-size: 16px;
+            /* 缩小字体 */
             outline: none;
             background: #f7f8fa;
             transition: border 0.2s;
-            height: 48px;
+            height: 100%;
+            /* 继承父容器高度 */
             box-sizing: border-box;
-        }
-
-        .file-input-style:focus {
-            border-color: #00A1D6;
+            padding: 0 12px;
+            /* 调整内边距 */
+            min-width: 0;
+            /* 防止 flex 溢出 */
         }
 
         .danmu-fetch-btn {
-            padding: 14px 22px;
-            font-size: 18px;
+            padding: 0 18px;
+            /* 调整内边距以适应高度 */
+            font-size: 16px;
+            /* 缩小字体 */
             border-radius: 14px;
             font-weight: 600;
             background: #222;
@@ -350,7 +415,11 @@
             cursor: pointer;
             transition: background 0.2s, box-shadow 0.2s;
             box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.08);
-            height: 48px;
+            height: 100%;
+            /* 继承父容器高度 */
+            width: 80px;
+            /* 固定宽度 */
+            flex-shrink: 0;
         }
 
         .danmu-fetch-btn:hover {
@@ -381,43 +450,51 @@
         </div>
         <div class="info-card">
             <img class="avatar" src="favicon.png" alt="favicon">
-            <div class="info-title">欢迎使用</div>
-            <div class="info-detail">本地弹幕播放器，支持本地视频与弹幕文件播放，体验极简风格。</div>
+            <div class="info-detail">本地弹幕播放器，支持本地视频与弹幕文件播放。</div> <!-- 精简描述 -->
             <div class="info-section">
                 <b>使用方法：</b>
-                <ul style="padding-left: 18px; margin: 8px 0 0 0; color: #444; font-size: 14px;">
+                <!-- 保持 ul 样式或根据需要调整 -->
+                <ul style="padding-left: 0; margin: 8px 0 0 0; color: #444; font-size: 14px; text-align: center;">
                     <li>选择本地视频和弹幕文件</li>
-                    <li>点击播放，实时发送弹幕</li>
-                    <li>支持批量加载与取消</li>
+                    <li>播放视频即可实时显示弹幕</li>
                 </ul>
             </div>
 
-            <!-- 新增弹幕速度调节滑块 -->
-            <div class="info-section" style="margin-top: 20px;">
+            <!-- 弹幕速度调节滑块 -->
+            <div class="info-section">
+                <!-- 保持内部结构不变 -->
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                     <b>弹幕速度：</b>
                     <span id="speedValue">1.0</span>
                 </div>
-                <input type="range" id="speedSlider" min="0.1" max="2" step="0.1" value="1"
-                    style="width: 100%; height: 6px; border-radius: 3px; outline: none;">
+                <input type="range" id="speedSlider" min="0.1" max="2" step="0.1" value="1">
             </div>
 
-            <div
-                style="margin-top:12px; width:100%; display:flex; flex-direction:column; gap:10px; align-items:center;">
-                <label for="videoFile" class="file-label" style="width:80%;">选择视频</label>
-                <input type="file" id="videoFile" class="file-input" accept="video/mp4">
-                <label for="danmuFileXml" class="file-label" style="width:80%;">标准XML弹幕</label>
-                <input type="file" id="danmuFileXml" class="file-input" accept=".xml">
-                <label for="danmuFileJson" class="file-label" style="width:80%;">人人视频JSON弹幕</label>
-                <input type="file" id="danmuFileJson" class="file-input" accept=".json">
-                <div style="display: flex; gap: 8px; width: calc(80% + 44px); box-sizing: border-box;">
-                    <input type="text" id="rrmjDanmuIdInput" placeholder="人人视频弹幕ID" class="file-input-style"
-                        style="padding: 0 12px; min-width: 0;">
-                    <button id="rrmjDanmuFetchBtn" class="danmu-fetch-btn"
-                        style="width: 90px; flex-shrink: 0;">获取</button>
+            <!-- 上传视频区域 -->
+            <div class="info-section">
+                <b>上传视频：</b>
+                <div class="file-control-group"> <!-- 应用新类 -->
+                    <label for="videoFile" class="file-label">选择本地视频文件</label> <!-- 移除内联 width -->
+                    <input type="file" id="videoFile" class="file-input" accept="video/mp4">
                 </div>
             </div>
 
+            <!-- 上传弹幕区域 -->
+            <div class="info-section">
+                <b>上传弹幕（任选一种）：</b>
+                <div class="file-control-group"> <!-- 应用新类 -->
+                    <label for="danmuFileXml" class="file-label">标准XML弹幕</label> <!-- 移除内联 width -->
+                    <input type="file" id="danmuFileXml" class="file-input" accept=".xml">
+                    <label for="danmuFileJson" class="file-label">人人视频JSON弹幕</label> <!-- 移除内联 width -->
+                    <input type="file" id="danmuFileJson" class="file-input" accept=".json">
+                    <!-- 应用新容器类，移除内联样式 -->
+                    <div class="input-group-container">
+                        <input type="text" id="rrmjDanmuIdInput" placeholder="输入人人视频弹幕ID" class="file-input-style">
+                        <!-- 移除内联 style -->
+                        <button id="rrmjDanmuFetchBtn" class="danmu-fetch-btn">获取</button> <!-- 移除内联 style -->
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
