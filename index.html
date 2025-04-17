@@ -322,6 +322,40 @@
             font-size: 17px;
             margin-left: 6px;
         }
+
+        .file-input-style {
+            flex: 1;
+            border: 2px solid #e3e5e7;
+            border-radius: 14px;
+            font-size: 18px;
+            outline: none;
+            background: #f7f8fa;
+            transition: border 0.2s;
+            height: 48px;
+            box-sizing: border-box;
+        }
+
+        .file-input-style:focus {
+            border-color: #00A1D6;
+        }
+
+        .danmu-fetch-btn {
+            padding: 14px 22px;
+            font-size: 18px;
+            border-radius: 14px;
+            font-weight: 600;
+            background: #222;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.08);
+            height: 48px;
+        }
+
+        .danmu-fetch-btn:hover {
+            background: #444;
+        }
     </style>
 </head>
 
@@ -374,9 +408,16 @@
                 <input type="file" id="videoFile" class="file-input" accept="video/mp4">
                 <label for="danmuFileXml" class="file-label" style="width:80%;">标准XML弹幕</label>
                 <input type="file" id="danmuFileXml" class="file-input" accept=".xml">
-                <label for="danmuFileJson" class="file-label" style="width:80%;">人人视频弹幕</label>
+                <label for="danmuFileJson" class="file-label" style="width:80%;">人人视频JSON弹幕</label>
                 <input type="file" id="danmuFileJson" class="file-input" accept=".json">
+                <div style="display: flex; gap: 8px; width: calc(80% + 44px); box-sizing: border-box;">
+                    <input type="text" id="rrmjDanmuIdInput" placeholder="人人视频弹幕ID" class="file-input-style"
+                        style="padding: 0 12px; min-width: 0;">
+                    <button id="rrmjDanmuFetchBtn" class="danmu-fetch-btn"
+                        style="width: 90px; flex-shrink: 0;">获取</button>
+                </div>
             </div>
+
         </div>
     </div>
 
@@ -810,16 +851,16 @@
             const file = e.target.files[0];
             const danmuLabel = document.querySelector('label[for="danmuFileJson"]');
             if (file) {
-                if (danmuLabel) danmuLabel.textContent = `人人视频弹幕：${file.name}`;
-                updateStatus(`正在解析人人视频弹幕文件: ${file.name}...`);
+                if (danmuLabel) danmuLabel.textContent = `人人视频JSON弹幕：${file.name}`;
+                updateStatus(`正在解析人人视频JSON弹幕文件: ${file.name}...`);
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     try {
-                        updateStatus("正在解析人人视频弹幕...");
+                        updateStatus("正在解析人人视频JSON弹幕...");
                         const startTime = performance.now();
                         const parsedDanmus = parseDanmuJSON(e.target.result);
                         const endTime = performance.now();
-                        updateStatus(`人人视频弹幕解析完成，耗时 ${(endTime - startTime).toFixed(2)}ms，共 ${parsedDanmus.length} 条弹幕`);
+                        updateStatus(`人人视频JSON弹幕解析完成，耗时 ${(endTime - startTime).toFixed(2)}ms，共 ${parsedDanmus.length} 条弹幕`);
                         if (dp) {
                             danmuList = parsedDanmus;
                             setupDanmuRealtimeLoader();
@@ -828,7 +869,7 @@
                             updateStatus('请先加载视频文件');
                         }
                     } catch (error) {
-                        updateStatus("人人视频弹幕解析失败: " + error.message);
+                        updateStatus("人人视频JSON弹幕解析失败: " + error.message);
                         console.error(error);
                     }
                 };
@@ -871,7 +912,46 @@
             }
             return result;
         }
-
+        // 新增：人人视频弹幕ID获取功能
+        document.getElementById('rrmjDanmuFetchBtn').addEventListener('click', async function () {
+            const id = document.getElementById('rrmjDanmuIdInput').value.trim();
+            if (!id) {
+                updateStatus('请输入人人视频弹幕ID');
+                return;
+            }
+            updateStatus('正在从人人视频接口获取弹幕...');
+            try {
+                const url = `https://static-dm.rrmj.plus/v1/produce/danmu/EPISODE/${id}`;
+                const resp = await fetch(url);
+                if (!resp.ok) {
+                    updateStatus('弹幕接口请求失败');
+                    return;
+                }
+                const json = await resp.json();
+                // 人人视频接口返回格式通常为 { code: 0, data: [...] }
+                let danmuArr = [];
+                if (Array.isArray(json)) {
+                    danmuArr = json;
+                } else if (json && Array.isArray(json.data)) {
+                    danmuArr = json.data;
+                }
+                if (danmuArr.length === 0) {
+                    updateStatus('未获取到弹幕数据');
+                    return;
+                }
+                const parsedDanmus = parseDanmuJSON(JSON.stringify(danmuArr));
+                if (dp) {
+                    danmuList = parsedDanmus;
+                    setupDanmuRealtimeLoader();
+                    updateStatus("弹幕已准备，将随视频播放实时加载");
+                } else {
+                    updateStatus('请先加载视频文件');
+                }
+            } catch (e) {
+                updateStatus('获取人人视频弹幕失败: ' + e.message);
+                console.error(e);
+            }
+        });
     </script>
 </body>
 
