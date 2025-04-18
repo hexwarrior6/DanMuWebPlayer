@@ -51,6 +51,12 @@ function initPlayer() {
     });
     dp.seek(0);
     updateStatus(`播放器已初始化，等待加载弹幕...`);
+
+    // 新增：如果弹幕列表已有数据（弹幕先于视频加载），则设置实时加载器
+    if (danmuList.length > 0) {
+        setupDanmuRealtimeLoader();
+        updateStatus("播放器和弹幕均已准备就绪"); // 更新状态
+    }
 }
 
 // 更新状态显示
@@ -340,11 +346,21 @@ document.getElementById('videoFile').addEventListener('change', function (e) {
 
 // 新增：根据时间戳实时加载弹幕
 function setupDanmuRealtimeLoader() {
-    if (!dp) return;
+    if (!dp || !dp.danmaku) return; // 增加对 dp.danmaku 的检查
+
+    // 新增：清除当前显示的弹幕，为加载新列表做准备
+    dp.danmaku.clear();
+
     // 重置所有弹幕的 sent 标记
     danmuList.forEach(d => d.sent = false);
 
-    dp.on('timeupdate', function () {
+    // 移除可能存在的旧监听器，避免重复添加 (可选但推荐)
+    // 注意：DPlayer 的 on/off 可能需要具体函数引用，匿名函数较难移除
+    // 如果遇到性能问题或重复触发，需要重构此部分以保存和移除监听器引用
+    // dp.off('timeupdate', timeUpdateHandler); // 假设 timeUpdateHandler 是保存的函数
+    // dp.off('seeked', seekedHandler);       // 假设 seekedHandler 是保存的函数
+
+    dp.on('timeupdate', function () { // timeUpdateHandler
         const currentTime = dp.video.currentTime;
         const currentSpeed = dp.danmaku.speedRate; // 获取当前速度设置
 
@@ -374,16 +390,13 @@ function setupDanmuRealtimeLoader() {
     });
 
     // 当 seek 时，重置 sent 标记
-    dp.on('seeked', function () {
+    dp.on('seeked', function () { // seekedHandler
         const currentTime = dp.video.currentTime;
         danmuList.forEach(danmu => {
             danmu.sent = danmu.time < currentTime - 0.3;
         });
     });
 }
-
-// 删除原有的 danmuFile 相关监听
-// document.getElementById('danmuFile').addEventListener(...);  // ← 删除这一段
 
 // 新增：标准XML弹幕监听
 document.getElementById('danmuFileXml').addEventListener('change', function (e) {
@@ -400,12 +413,13 @@ document.getElementById('danmuFileXml').addEventListener('change', function (e) 
                 const parsedDanmus = await parseDanmuWithWorker(e.target.result);
                 const endTime = performance.now();
                 updateStatus(`解析完成，耗时 ${(endTime - startTime).toFixed(2)}ms，共 ${parsedDanmus.length} 条弹幕`);
+                danmuList = parsedDanmus; // 先更新弹幕列表
+
+                // 修改：检查 dp 是否已初始化
                 if (dp) {
-                    danmuList = parsedDanmus;
-                    setupDanmuRealtimeLoader();
-                    updateStatus("弹幕已准备，将随视频播放实时加载");
+                    setupDanmuRealtimeLoader(); // 如果播放器已在，则设置加载器
                 } else {
-                    updateStatus('请先加载视频文件');
+                    updateStatus('弹幕已获取，请加载视频文件'); // 如果播放器不在，提示用户
                 }
             } catch (error) {
                 updateStatus("弹幕解析失败: " + error.message);
@@ -434,12 +448,13 @@ document.getElementById('danmuFileJson').addEventListener('change', function (e)
                 const parsedDanmus = parseDanmuJSON(e.target.result);
                 const endTime = performance.now();
                 updateStatus(`人人视频JSON弹幕解析完成，耗时 ${(endTime - startTime).toFixed(2)}ms，共 ${parsedDanmus.length} 条弹幕`);
+                danmuList = parsedDanmus; // 先更新弹幕列表
+
+                // 修改：检查 dp 是否已初始化
                 if (dp) {
-                    danmuList = parsedDanmus;
-                    setupDanmuRealtimeLoader();
-                    updateStatus("弹幕已准备，将随视频播放实时加载");
+                    setupDanmuRealtimeLoader(); // 如果播放器已在，则设置加载器
                 } else {
-                    updateStatus('请先加载视频文件');
+                    updateStatus('弹幕已解析，请加载视频文件'); // 如果播放器不在，提示用户
                 }
             } catch (error) {
                 updateStatus("人人视频JSON弹幕解析失败: " + error.message);
@@ -513,12 +528,13 @@ document.getElementById('rrmjDanmuFetchBtn').addEventListener('click', async fun
             return;
         }
         const parsedDanmus = parseDanmuJSON(JSON.stringify(danmuArr));
+        danmuList = parsedDanmus; // 先更新弹幕列表
+
+        // 修改：检查 dp 是否已初始化
         if (dp) {
-            danmuList = parsedDanmus;
-            setupDanmuRealtimeLoader();
-            updateStatus("弹幕已准备，将随视频播放实时加载");
+            setupDanmuRealtimeLoader(); // 如果播放器已在，则设置加载器
         } else {
-            updateStatus('请先加载视频文件');
+            updateStatus('弹幕已获取，请加载视频文件'); // 如果播放器不在，提示用户
         }
     } catch (e) {
         updateStatus('获取人人视频弹幕失败: ' + e.message);
