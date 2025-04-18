@@ -1,0 +1,417 @@
+body {
+    font-family: "HarmonyOS Sans", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+    background: #f6f7fb;
+    margin: 0;
+    padding: 0;
+}
+
+.main-layout {
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+    max-width: 80%;
+    margin: 48px auto 0 auto;
+    padding: 0 16px;
+}
+
+@media (max-width: 900px) {
+    .main-layout {
+        flex-direction: column;
+        gap: 20px;
+        margin-top: 24px;
+    }
+
+    .controls input[type="text"] {
+        max-width: 100%;
+        /* 新增：在移动端允许宽度自适应父容器 */
+        min-width: 0;
+        /* 新增：防止flex导致的溢出 */
+    }
+}
+
+.player-card {
+    flex: 2;
+    background: #fff;
+    border-radius: 28px;
+    box-shadow: 0 6px 32px 0 rgba(30, 34, 40, 0.10);
+    padding: 32px 32px 24px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#dplayer {
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.06);
+    margin-bottom: 32px;
+    position: relative;
+    aspect-ratio: 16/9;
+    min-height: 360px;
+    /* 提供一个最小高度作为备用 */
+}
+
+/* DPlayer加载后会创建自己的容器，确保它填满父元素 */
+#dplayer .dplayer-video-wrap {
+    width: 100%;
+    height: 100%;
+}
+
+#video-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #bbb;
+    font-size: 22px;
+    background: #f7f8fa;
+    z-index: 2;
+    pointer-events: none;
+    height: 100%;
+    width: 100%;
+}
+
+#video-placeholder .icon {
+    font-size: 60px;
+    margin-bottom: 18px;
+    color: #e3e5e7;
+}
+
+.controls {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 0;
+    width: 100%;
+    justify-content: center;
+}
+
+input[type="text"] {
+    flex: 1;
+    padding: 14px 18px;
+    border: 2px solid #e3e5e7;
+    border-radius: 14px;
+    font-size: 18px;
+    outline: none;
+    background: #f7f8fa;
+    transition: border 0.2s;
+    max-width: 400px;
+    /* 新增：限制最大宽度，防止超出 */
+}
+
+input[type="text"]:focus {
+    border-color: #00A1D6;
+}
+
+button,
+.file-label {
+    border: none;
+    border-radius: 14px;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 14px 22px;
+    background: #222;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.08);
+}
+
+button:hover,
+.file-label:hover {
+    background: #444;
+}
+
+button:disabled {
+    background: #b8c0cc;
+    cursor: not-allowed;
+}
+
+.file-input {
+    display: none;
+}
+
+.status {
+    margin-top: 18px;
+    padding: 14px;
+    background: #f2f3f7;
+    border-radius: 14px;
+    color: #555;
+    font-size: 16px;
+    text-align: center;
+}
+
+.progress-container {
+    margin-top: 18px;
+    display: none;
+}
+
+progress {
+    width: 100%;
+    height: 18px;
+    border-radius: 9px;
+    overflow: hidden;
+    background: #e3e5e7;
+    accent-color: #00A1D6;
+}
+
+#progressText {
+    color: #00A1D6;
+    font-weight: 600;
+    margin-top: 6px;
+    font-size: 16px;
+    text-align: center;
+}
+
+.info-card {
+    flex: 1;
+    background: linear-gradient(135deg, #fafdff 60%, #e9f3ff 100%);
+    border-radius: 32px;
+    box-shadow: 0 8px 36px 0 rgba(30, 34, 40, 0.13), 0 1.5px 6px 0 rgba(0, 161, 214, 0.06);
+    padding: 20px;
+    /* 减少上下内边距 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 260px;
+    max-width: 340px;
+    border: 1.5px solid #e3e5e7;
+    position: relative;
+    overflow: hidden;
+}
+
+.avatar {
+    width: 70px;
+    /* 缩小头像 */
+    height: 70px;
+    /* 缩小头像 */
+    border-radius: 50%;
+    background: #e3e5e7;
+    margin-bottom: 16px;
+    /* 减少间距 */
+    object-fit: cover;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 12px 0 rgba(0, 161, 214, 0.08);
+}
+
+.info-detail {
+    font-size: 15px;
+    /* 略微缩小字体 */
+    color: #4a6fa1;
+    margin-bottom: 16px;
+    /* 减少间距 */
+    text-align: center;
+    background: #f2f7fb;
+    border-radius: 10px;
+    padding: 6px 10px;
+    /* 减少内边距 */
+}
+
+.info-section {
+    width: 100%;
+    margin-bottom: 8px;
+    /* 减少下间距 */
+    margin-top: 12px;
+    /* 减少上间距 */
+    position: relative;
+}
+
+.info-section:not(:first-child) {
+    margin-top: 16px;
+    /* 调整分割线和内容间距 */
+}
+
+.info-section:not(:first-child)::before {
+    content: "";
+    display: block;
+    width: 60%;
+    /* 缩短分割线 */
+    height: 1px;
+    /* 变细分割线 */
+    background: linear-gradient(90deg, #e3e5e7 0%, #b8c0cc 100%);
+    margin: 0 auto 12px auto;
+    /* 调整分割线上下间距 */
+    border-radius: 1px;
+}
+
+.info-section b {
+    /* 为分区标题添加样式 */
+    display: block;
+    text-align: left;
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 8px;
+    margin-left: 20px;
+}
+
+.info-section ul {
+    padding-left: 0;
+    margin: 8px 0 0 0;
+    /* 调整列表边距 */
+    color: #3a4a5a;
+    font-size: 14px;
+    /* 缩小列表字体 */
+    list-style: none;
+    text-align: center;
+    /* 居中列表项 */
+}
+
+.info-section ul li {
+    margin-bottom: 5px;
+    /* 减少列表项间距 */
+    display: inline-block;
+    /* 让列表项水平排列，如果需要 */
+    margin-right: 10px;
+    /* 如果水平排列，添加右边距 */
+    align-items: start;
+    /* 确保列表项对齐 */
+    text-align: left;
+    /* 确保文本对齐 */
+    display: flex;
+    /* 确保项目符号对齐 */
+    margin-left: 20px;
+}
+
+.info-section ul li::before {
+    content: "•";
+    color: #00A1D6;
+    font-size: 16px;
+    /* 调整项目符号大小 */
+    margin-right: 6px;
+    /* 调整项目符号间距 */
+    line-height: 1;
+}
+
+/* 统一文件选择标签和输入框组样式 */
+.file-control-group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    margin-top: 8px;
+    /* 减少与标题的间距 */
+}
+
+.file-label,
+.input-group-container {
+    /* 应用于标签和输入框组容器 */
+    display: block;
+    /* 或 flex */
+    width: 100%;
+    /* 统一宽度 */
+    max-width: 300px;
+    /* 设置最大宽度 */
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+}
+
+.input-group-container {
+    /* 特指输入框+按钮的容器 */
+    display: flex;
+    gap: 8px;
+    height: 48px;
+    /* 保持高度一致 */
+    padding: 0;
+    /* 移除容器的内边距 */
+}
+
+/* 弹幕速度滑块美化 */
+#speedSlider {
+    width: 87%;
+    height: 8px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #00A1D6 0%, #e3e5e7 100%);
+    outline: none;
+    accent-color: #00A1D6;
+    margin: auto;
+    display: flex;
+}
+
+#speedSlider::-webkit-slider-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #00A1D6;
+    box-shadow: 0 2px 6px 0 rgba(0, 161, 214, 0.10);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+#speedSlider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #00A1D6;
+    box-shadow: 0 2px 6px 0 rgba(0, 161, 214, 0.10);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+#speedSlider::-ms-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #00A1D6;
+    box-shadow: 0 2px 6px 0 rgba(0, 161, 214, 0.10);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+#speedValue {
+    color: #00A1D6;
+    font-weight: bold;
+    font-size: 17px;
+    margin-right: 25px;
+}
+
+.file-input-style {
+    flex: 1;
+    border: 2px solid #e3e5e7;
+    border-radius: 14px;
+    font-size: 16px;
+    /* 缩小字体 */
+    outline: none;
+    background: #f7f8fa;
+    transition: border 0.2s;
+    height: 100%;
+    /* 继承父容器高度 */
+    box-sizing: border-box;
+    padding: 0 12px;
+    /* 调整内边距 */
+    min-width: 0;
+    /* 防止 flex 溢出 */
+}
+
+.danmu-fetch-btn {
+    padding: 0 18px;
+    /* 调整内边距以适应高度 */
+    font-size: 16px;
+    /* 缩小字体 */
+    border-radius: 14px;
+    font-weight: 600;
+    background: #222;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.08);
+    height: 100%;
+    /* 继承父容器高度 */
+    width: 80px;
+    /* 固定宽度 */
+    flex-shrink: 0;
+}
+
+.danmu-fetch-btn:hover {
+    background: #444;
+}
