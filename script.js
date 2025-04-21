@@ -9,6 +9,12 @@ updateStatus('请选择视频文件和弹幕文件');
 
 // 修改 initPlayer：选择视频后初始化 DPlayer，并隐藏占位层
 function initPlayer() {
+    // 新增：如果已存在 DPlayer 实例，先销毁它
+    if (dp) {
+        dp.destroy();
+        dp = null; // 将 dp 设为 null，确保旧实例被垃圾回收
+    }
+
     // 隐藏占位层
     const placeholder = document.getElementById('video-placeholder');
     if (placeholder) placeholder.style.display = 'none';
@@ -31,8 +37,12 @@ function initPlayer() {
     // 更新全局样式
     speedStyle.textContent = `.dplayer-danmaku-item { animation-duration: ${newDuration}s !important; }`;
 
+    // 确保 dplayer 容器存在且干净 (destroy 应该会处理，但可以加一层保险)
+    const container = document.getElementById('dplayer');
+    // container.innerHTML = ''; // 通常 destroy 后不需要手动清空
+
     dp = new DPlayer({
-        container: document.getElementById('dplayer'),
+        container: container, // 使用获取到的容器
         autoplay: false,
         theme: '#FADFA3',
         video: {
