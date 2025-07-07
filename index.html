@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="favicon.png" type="image/x-icon">
-    <title>本地弹幕播放器 - 支持直播</title>
+    <title>本地弹幕播放器</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dplayer/dist/DPlayer.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -13,17 +13,14 @@
 <body>
     <div class="main-layout">
         <div class="player-card">
-            <h1>本地弹幕播放器 - 支持直播</h1>
+            <h1 style="margin-top: 0;">本地弹幕播放器</h1>
             <div id="dplayer">
                 <div id="video-placeholder">
                     <div class="icon">▶️</div>
                     <div>请先选择本地视频文件</div>
                 </div>
             </div>
-            <div class="controls">
-                <input type="text" id="danmuInput" placeholder="输入弹幕内容">
-                <button id="sendDanmu">发送</button>
-            </div>
+
             <div class="progress-container" id="progressContainer">
                 <progress id="loadProgress" value="0" max="100"></progress>
                 <div id="progressText">加载中: 0%</div>

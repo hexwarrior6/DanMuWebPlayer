@@ -292,75 +292,26 @@ function parseDanmuXML(xmlText) {
 }
 
 // 事件监听
-document.getElementById('sendDanmu').addEventListener('click', function () {
-    const text = document.getElementById('danmuInput').value;
-    if (text.trim() !== '' && dp) {
-        // 获取当前速度设置
-        const currentSpeed = dp.danmaku.speedRate;
 
-        dp.danmaku.draw({
-            text: text,
-            color: '#ffffff',
-            type: 'right'
-        });
-
-        // 确保新发送的弹幕使用当前速度
-        setTimeout(() => {
-            const danmuItems = document.querySelectorAll('.dplayer-danmaku-item');
-            if (danmuItems.length > 0) {
-                const lastItem = danmuItems[danmuItems.length - 1];
-                const baseDuration = 8.5;
-                lastItem.style.animationDuration = `${baseDuration / currentSpeed}s`;
-            }
-        }, 10);
-
-        document.getElementById('danmuInput').value = '';
-        updateStatus(`已发送弹幕: ${text}`);
-    }
-});
 
 // 新增：弹幕速度调节滑块事件监听
 document.getElementById('speedSlider').addEventListener('input', function () {
     const speedValue = parseFloat(this.value);
     document.getElementById('speedValue').textContent = speedValue.toFixed(1);
     if (dp && dp.danmaku) {
-        // 保存当前速度设置
-        dp.danmaku.speedRate = speedValue;
-
-        // 清除所有现有弹幕
-        dp.danmaku.clear();
-
-        // 重置所有弹幕的sent标记，以便重新加载
-        if (danmuList && danmuList.length > 0) {
-            danmuList.forEach(danmu => {
-                danmu.sent = false;
-            });
-        }
-
-        // 添加一个全局样式来控制所有弹幕的速度
+        const baseDuration = 8.5; // 假设原始动画时间为8.5秒
+        const newDuration = baseDuration / speedValue;
         let speedStyle = document.getElementById('danmu-speed-style');
         if (!speedStyle) {
             speedStyle = document.createElement('style');
             speedStyle.id = 'danmu-speed-style';
             document.head.appendChild(speedStyle);
         }
-
-        // 计算新的动画时间（基于默认速度1.0）
-        const baseDuration = 8.5; // DPlayer默认动画时间
-        const newDuration = baseDuration / speedValue;
-
-        // 更新全局样式
         speedStyle.textContent = `.dplayer-danmaku-item { animation-duration: ${newDuration}s !important; }`;
-
-        updateStatus(`弹幕速度已调整为: ${speedValue.toFixed(1)}`);
     }
 });
 
-document.getElementById('danmuInput').addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') {
-        document.getElementById('sendDanmu').click();
-    }
-});
+
 
 document.getElementById('videoFile').addEventListener('change', function (e) {
     const file = e.target.files[0];
