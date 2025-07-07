@@ -46,7 +46,7 @@ body {
     flex-direction: column;
     align-items: center;
     width: auto;
-    max-width: 800px;
+    width: 750px;
     height: fit-content;
 }
 
@@ -68,7 +68,7 @@ body {
     margin-bottom: 32px;
     position: relative;
     aspect-ratio: 16/9;
-    min-height: 360px;
+    /* min-height: 360px; */
     /* 提供一个最小高度作为备用 */
     max-width: 720px;
 }
@@ -193,7 +193,7 @@ progress {
     background: linear-gradient(135deg, #fafdff 60%, #e9f3ff 100%);
     border-radius: 32px;
     box-shadow: 0 8px 36px 0 rgba(30, 34, 40, 0.13), 0 1.5px 6px 0 rgba(0, 161, 214, 0.06);
-    padding: 20px 20px 40px 20px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -202,7 +202,6 @@ progress {
     border: 1.5px solid #e3e5e7;
     position: relative;
     overflow: visible;
-    /* 完全自适应高度 */
     height: auto;
     min-height: auto;
 }
@@ -410,6 +409,7 @@ progress {
     gap: 10px;
     align-items: center;
     margin-top: 8px;
+    margin-bottom: 10px;
     /* 减少与标题的间距 */
 }
 
@@ -435,21 +435,6 @@ progress {
     /* 保持高度一致 */
     padding: 0;
     /* 移除容器的内边距 */
-}
-
-#liveStreamInput {
-    flex: 1;
-    padding: 10px 14px;
-    border: 2px solid #e3e5e7;
-    border-radius: 12px;
-    font-size: 14px;
-    outline: none;
-    background: #f7f8fa;
-    transition: border 0.2s;
-}
-
-#liveStreamInput:focus {
-    border-color: #00A1D6;
 }
 
 /* 弹幕速度滑块美化 */

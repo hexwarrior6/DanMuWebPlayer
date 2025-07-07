@@ -42,7 +42,6 @@
 
             <!-- 弹幕速度调节滑块 -->
             <div class="info-section">
-                <!-- 保持内部结构不变 -->
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                     <b>弹幕速度：</b>
                     <span id="speedValue">1.0</span>
@@ -52,25 +51,20 @@
 
             <!-- 上传视频区域 -->
             <div class="info-section">
-                <b>上传视频：</b>
+                <b>视频源(任选一种)：</b>
                 <div class="file-control-group"> <!-- 应用新类 -->
                     <label for="videoFile" class="file-label">选择本地视频文件</label> <!-- 移除内联 width -->
                     <input type="file" id="videoFile" class="file-input" accept="video/*">
                 </div>
-            </div>
-
-            <!-- 直播源区域 -->
-            <div class="info-section">
-                <b>直播源：</b>
                 <div class="input-group-container">
-                    <input type="text" id="liveStreamInput" placeholder="输入m3u8直播源地址" class="file-input-style">
+                    <input type="text" id="liveStreamInput" placeholder="m3u8直播源地址" class="file-input-style">
                     <button id="loadLiveStreamBtn" class="danmu-fetch-btn">加载</button>
                 </div>
             </div>
 
             <!-- 上传弹幕区域 -->
             <div class="info-section">
-                <b>上传弹幕（任选一种）：</b>
+                <b>弹幕源(任选一种)：</b>
                 <div class="file-control-group"> <!-- 应用新类 -->
                     <label for="danmuFileXml" class="file-label">标准XML弹幕</label> <!-- 移除内联 width -->
                     <input type="file" id="danmuFileXml" class="file-input" accept=".xml">
@@ -79,7 +73,6 @@
                     <!-- 应用新容器类，移除内联样式 -->
                     <div class="input-group-container">
                         <input type="text" id="rrmjDanmuIdInput" placeholder="输入人人视频弹幕ID" class="file-input-style">
-                        <!-- 移除内联 style -->
                         <button id="rrmjDanmuFetchBtn" class="danmu-fetch-btn">获取</button> <!-- 移除内联 style -->
                     </div>
                 </div>
