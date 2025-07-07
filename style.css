@@ -322,6 +322,21 @@ progress {
     /* 移除容器的内边距 */
 }
 
+#liveStreamInput {
+    flex: 1;
+    padding: 10px 14px;
+    border: 2px solid #e3e5e7;
+    border-radius: 12px;
+    font-size: 14px;
+    outline: none;
+    background: #f7f8fa;
+    transition: border 0.2s;
+}
+
+#liveStreamInput:focus {
+    border-color: #00A1D6;
+}
+
 /* 弹幕速度滑块美化 */
 #speedSlider {
     width: 87%;

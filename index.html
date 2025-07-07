@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="favicon.png" type="image/x-icon">
-    <title>本地弹幕播放器</title>
+    <title>本地弹幕播放器 - 支持直播</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dplayer/dist/DPlayer.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -13,7 +13,7 @@
 <body>
     <div class="main-layout">
         <div class="player-card">
-            <h1>本地弹幕播放器</h1>
+            <h1>本地弹幕播放器 - 支持直播</h1>
             <div id="dplayer">
                 <div id="video-placeholder">
                     <div class="icon">▶️</div>
@@ -32,13 +32,14 @@
         </div>
         <div class="info-card">
             <img class="avatar" src="favicon.png" alt="favicon">
-            <div class="info-detail">本地弹幕播放器，支持本地视频与弹幕文件播放。</div> <!-- 精简描述 -->
+            <div class="info-detail">本地弹幕播放器，支持本地视频、m3u8直播流与弹幕文件播放。</div> <!-- 精简描述 -->
             <div class="info-section">
                 <b>使用方法：</b>
                 <!-- 保持 ul 样式或根据需要调整 -->
                 <ul style="padding-left: 0; margin: 8px 0 0 0; color: #444; font-size: 14px; text-align: center;">
                     <li>选择本地视频和弹幕文件</li>
-                    <li>播放视频即可实时显示弹幕</li>
+                    <li>或输入m3u8直播源地址</li>
+                    <li>播放视频/直播即可实时显示弹幕</li>
                 </ul>
             </div>
 
@@ -58,6 +59,15 @@
                 <div class="file-control-group"> <!-- 应用新类 -->
                     <label for="videoFile" class="file-label">选择本地视频文件</label> <!-- 移除内联 width -->
                     <input type="file" id="videoFile" class="file-input" accept="video/*">
+                </div>
+            </div>
+
+            <!-- 直播源区域 -->
+            <div class="info-section">
+                <b>直播源：</b>
+                <div class="input-group-container">
+                    <input type="text" id="liveStreamInput" placeholder="输入m3u8直播源地址" class="file-input-style">
+                    <button id="loadLiveStreamBtn" class="danmu-fetch-btn">加载</button>
                 </div>
             </div>
 
@@ -82,6 +92,7 @@
 
     <!-- 引入必要的库 -->
     <script src="https://cdn.jsdelivr.net/npm/dplayer/dist/DPlayer.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
     <!-- 引入自定义脚本 -->
     <script src="script.js"></script>

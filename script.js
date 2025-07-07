@@ -4,10 +4,11 @@ let videoUrl = '';
 let danmuList = []; // 存储弹幕
 let loadingWorker = null;
 let isCancelled = false;
+let isLiveStream = false; // 标记是否为直播流
 
 updateStatus('请选择视频文件和弹幕文件');
 
-// 修改 initPlayer：选择视频后初始化 DPlayer，并隐藏占位层
+// 修改 initPlayer：选择视频或直播源后初始化 DPlayer，并隐藏占位层
 function initPlayer() {
     // 新增：如果已存在 DPlayer 实例，先销毁它
     if (dp) {
@@ -41,13 +42,15 @@ function initPlayer() {
     const container = document.getElementById('dplayer');
     // container.innerHTML = ''; // 通常 destroy 后不需要手动清空
 
-    dp = new DPlayer({
+    // 配置播放器选项
+    const playerOptions = {
         container: container, // 使用获取到的容器
-        autoplay: false,
+        autoplay: isLiveStream, // 直播流自动播放
         theme: '#FADFA3',
         video: {
             url: videoUrl,
-            type: 'auto'
+            type: isLiveStream ? 'hls' : 'auto', // 直播流使用HLS类型
+            live: isLiveStream // 设置是否为直播
         },
         danmaku: {
             id: 'local-danmu',
@@ -58,12 +61,32 @@ function initPlayer() {
             speedRate: speedRate,
         },
         contextmenu: []
-    });
-    dp.seek(0);
-    updateStatus(`播放器已初始化，等待加载弹幕...`);
+    };
+
+    // 如果是直播流，添加HLS配置
+    if (isLiveStream) {
+        playerOptions.video.customType = {
+            hls: function(video, player) {
+                const hls = new Hls();
+                hls.loadSource(video.src);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    player.play();
+                });
+            }
+        };
+    }
+
+    dp = new DPlayer(playerOptions);
+    
+    if (!isLiveStream) {
+        dp.seek(0);
+    }
+    
+    updateStatus(`播放器已初始化，${isLiveStream ? '正在加载直播流...' : '等待加载弹幕...'}`);
 
     // 新增：如果弹幕列表已有数据（弹幕先于视频加载），则设置实时加载器
-    if (danmuList.length > 0) {
+    if (danmuList.length > 0 && !isLiveStream) {
         setupDanmuRealtimeLoader();
         updateStatus("播放器和弹幕均已准备就绪"); // 更新状态
     }
@@ -343,12 +366,15 @@ document.getElementById('videoFile').addEventListener('change', function (e) {
     const file = e.target.files[0];
     const videoLabel = document.querySelector('label[for="videoFile"]');
     if (file) {
+        isLiveStream = false; // 设置为本地视频模式
         videoUrl = URL.createObjectURL(file);
         document.querySelector('.player-card h1').textContent = file.name;
         updateStatus(`已加载视频文件: ${file.name}`);
         initPlayer();
         // 修改按钮文字
         if (videoLabel) videoLabel.textContent = `视频：${file.name}`;
+        // 清空直播源输入框
+        document.getElementById('liveStreamInput').value = '';
     } else {
         if (videoLabel) videoLabel.textContent = '选择视频';
     }
@@ -478,8 +504,40 @@ document.getElementById('danmuFileJson').addEventListener('change', function (e)
     }
 });
 
+// 直播源加载按钮事件监听
+document.getElementById('loadLiveStreamBtn').addEventListener('click', function() {
+    const liveStreamUrl = document.getElementById('liveStreamInput').value.trim();
+    if (!liveStreamUrl) {
+        updateStatus('请输入有效的m3u8直播源地址');
+        return;
+    }
+    
+    // 验证URL是否为m3u8格式
+    if (!liveStreamUrl.endsWith('.m3u8') && !liveStreamUrl.includes('.m3u8?')) {
+        updateStatus('请输入有效的m3u8格式直播源地址');
+        return;
+    }
+    
+    isLiveStream = true; // 设置为直播模式
+    videoUrl = liveStreamUrl;
+    document.querySelector('.player-card h1').textContent = '直播流';
+    updateStatus(`正在加载直播源...`);
+    
+    // 清空本地视频选择
+    document.getElementById('videoFile').value = '';
+    const videoLabel = document.querySelector('label[for="videoFile"]');
+    if (videoLabel) videoLabel.textContent = '选择本地视频文件';
+    
+    // 检查HLS.js支持
+    if (Hls.isSupported()) {
+        initPlayer();
+    } else {
+        updateStatus('您的浏览器不支持HLS直播流');
+    }
+});
+
 // 初始化
-updateStatus('请选择视频文件和弹幕文件');
+updateStatus('请选择视频文件和弹幕文件或输入直播源');
 
 // 新增：解析 JSON 弹幕
 function parseDanmuJSON(jsonText) {
